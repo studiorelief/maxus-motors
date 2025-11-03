@@ -1,0 +1,20 @@
+.modeles_cards-asset-hover-w {
+  scale: 1.1;
+  opacity: 0;
+  transition:
+    opacity 0.3s ease,
+    scale 0.3s ease;
+}
+
+.modeles_cards:hover .modeles_cards-asset-hover-w {
+  opacity: 1;
+  scale: 1;
+}
+
+.modeles_cards-title {
+  transition: color 0.3s ease;
+}
+
+.modeles_cards:hover .modeles_cards-title {
+  color: var(--_theme---text-color--invert-default);
+}

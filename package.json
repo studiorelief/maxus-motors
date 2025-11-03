@@ -1,13 +1,13 @@
 {
-  "name": "@finsweet/developer-starter",
-  "version": "0.0.0",
+  "name": "@studiorelief/maxus-motors",
+  "version": "1.0.0",
   "description": "Developer starter template for Finsweet projects.",
-  "homepage": "https://github.com/finsweet/developer-starter#readme",
+  "homepage": "https://github.com/studiorelief/maxus-motors#readme",
   "license": "ISC",
   "keywords": [],
   "author": {
-    "name": "Finsweet",
-    "url": "https://finsweet.com/"
+    "name": "Studio Relife",
+    "url": "https://www.studiorelief.fr/"
   },
   "repository": {
     "type": "git",
@@ -52,7 +52,11 @@
     "typescript-eslint": "^8.23.0"
   },
   "dependencies": {
-    "@finsweet/ts-utils": "^0.40.0"
+    "@finsweet/ts-utils": "^0.40.0",
+    "@marker.io/browser": "^0.20.2",
+    "gsap": "^3.13.0",
+    "mapbox-gl": "^3.15.0",
+    "swiper": "^12.0.2"
   },
   "engines": {
     "pnpm": ">=10"

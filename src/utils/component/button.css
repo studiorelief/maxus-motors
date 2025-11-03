@@ -1,0 +1,100 @@
+/**
+ * ============================================================================
+ * STYLES POUR LES BOUTONS PRYMARY
+ * ============================================================================
+ */
+
+/**
+ * ============================================================================
+ * STYLES POUR LES BOUTONS PRYMARY - TRANSITIONS
+ * ============================================================================
+ */
+
+.button_primary_bg-hover,
+.button_icon_bg-hover {
+  transition: width 0.3s ease-out;
+}
+
+.button_primary_text {
+  transition: color 0.3s ease-out;
+}
+
+.button_primary_icon {
+  transition:
+    background-color 0.3s ease-out,
+    color 0.3s ease-out,
+    scale 0.3s ease-out;
+}
+
+/**
+ * ============================================================================
+ * STYLES POUR LES BOUTONS PRYMARY - HOVER WiDTH
+ * ============================================================================
+ */
+
+[data-wf--button-primary--variant]:hover .button_primary_bg-hover,
+[data-wf--button-secondary--variant]:hover .button_secondary_bg-hover,
+[data-wf--button-tertiary--variant]:hover .button_tertiary_bg-hover,
+.button_icon_wrap:hover .button_icon_bg-hover {
+  width: 100%;
+}
+
+/**
+ * ============================================================================
+ * STYLES POUR LES BOUTONS PRYMARY - CIAN
+ * ============================================================================
+ */
+
+[data-wf--button-primary--variant='cian']:hover .button_primary_icon {
+  background-color: var(--_theme---background--tertiary-default);
+  color: var(--_theme---border-color--invert-default);
+  scale: 1.15;
+}
+
+/**
+ * ============================================================================
+ * STYLES POUR LES BOUTONS PRYMARY - NAVY
+ * ============================================================================
+ */
+
+[data-wf--button-primary--variant='navy']:hover .button_primary_icon {
+  background-color: var(--_theme---background--tertiary-default);
+  color: var(--_theme---border-color--invert-default);
+  scale: 1.15;
+}
+
+[data-wf--button-primary--variant='navy']:hover .button_primary_text {
+  color: var(--_theme---border-color--primary-default);
+}
+
+/**
+ * ============================================================================
+ * STYLES POUR LES BOUTONS PRYMARY - WHITE
+ * ============================================================================
+ */
+
+[data-wf--button-primary--variant='white']:hover .button_primary_icon {
+  scale: 1.15;
+}
+
+/**
+ * ============================================================================
+ * STYLES POUR LES BOUTONS SECONDARY
+ * ============================================================================
+ */
+
+.button_secondary_wrap {
+  transition:
+    padding-left 0.3s ease-out,
+    padding-right 0.3s ease-out;
+}
+
+[data-wf--button-secondary--variant='icon-on']:hover {
+  padding-left: var(--_layout---spacing--xxlarge);
+  padding-right: var(--_layout---spacing--large);
+}
+
+[data-wf--button-secondary--variant='icon-off']:hover {
+  padding-left: var(--_layout---spacing--xxlarge);
+  padding-right: var(--_layout---spacing--xxlarge);
+}

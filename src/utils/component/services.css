@@ -1,0 +1,7 @@
+.services_cards .services_cards-hover {
+  transition: opacity 0.3s ease;
+}
+
+.services_cards:hover .services_cards-hover {
+  opacity: 1;
+}

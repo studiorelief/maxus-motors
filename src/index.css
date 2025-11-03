@@ -1,0 +1,13 @@
+@import './utils/map/map.css';
+/* @import './utils/component/button.css'; */
+@import './utils/cards/modeles-cards.css';
+@import './utils/component/services.css';
+@import './utils/swiper/swiper-slider.css';
+
+.swiper.is-services {
+  overflow: visible !important;
+}
+
+.swiper-button-disabled {
+  opacity: 0.1;
+}

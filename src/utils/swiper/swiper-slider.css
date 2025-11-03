@@ -1,0 +1,18 @@
+.offres_pagination-wrapper .swiper-pagination-wrapper {
+  width: auto;
+  margin-right: auto;
+  /* background-color: red; */
+}
+
+.swiper-pagination-fraction,
+.swiper-pagination-custom,
+.swiper-horizontal > .swiper-pagination-bullets,
+.swiper-pagination-bullets.swiper-pagination-horizontal {
+  width: auto !important;
+}
+
+/* VEHICULES SLIDERS */
+/* Styles appliqués via JS quand la slide active a .is-dark */
+.vehicule_hero_content-heading.is-dark-mode {
+  color: white;
+}
