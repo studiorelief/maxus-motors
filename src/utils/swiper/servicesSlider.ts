@@ -46,6 +46,18 @@ export function initServicesSlide() {
         nextEl: '.services_component .services_slider-arrow',
       },
       touchEventsTarget: 'wrapper',
+      breakpoints: {
+        991: {
+          slidesPerView: 'auto',
+          centeredSlides: false,
+          spaceBetween: 2 * 16,
+        },
+        240: {
+          slidesPerView: 1,
+          centeredSlides: true,
+          spaceBetween: 2 * 16,
+        },
+      },
     });
   });
 }

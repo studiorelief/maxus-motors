@@ -98,3 +98,27 @@
   padding-left: var(--_layout---spacing--xxlarge);
   padding-right: var(--_layout---spacing--xxlarge);
 }
+
+/**
+ * ============================================================================
+ * STYLES POUR LES BOUTONS CARDS HOVER
+ * ============================================================================
+ */
+
+.modeles_cards:hover [data-wf--button-secondary--variant='icon-on'] {
+  padding-left: var(--_layout---spacing--xxlarge);
+  padding-right: var(--_layout---spacing--large);
+}
+
+.blog_hub_cards:hover [data-wf--button-secondary--variant='icon-on-bg-transparent'] {
+  padding-left: var(--_layout---spacing--xxlarge);
+  padding-right: var(--_layout---spacing--xxlarge);
+}
+
+.blog_hub_cards-cover {
+  transition: scale 0.3s ease-out;
+}
+
+.blog_hub_cards:hover .blog_hub_cards-cover {
+  scale: 1.05;
+}

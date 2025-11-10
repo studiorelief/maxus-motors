@@ -48,11 +48,12 @@ function clearScrollTimeout(): void {
  */
 export function navbarScrollBehavior(): void {
   const navLeft = document.querySelector('.nav_left') as HTMLElement;
+  const navBrand = document.querySelector('.nav_brand') as HTMLElement;
   const navBackgroundLayer = document.querySelector(
     '.nav_container_background-layer'
   ) as HTMLElement;
 
-  if (!navLeft || !navBackgroundLayer) {
+  if (!navLeft || !navBackgroundLayer || !navBrand) {
     return;
   }
 
@@ -60,6 +61,10 @@ export function navbarScrollBehavior(): void {
   navLeft.style.transition = 'transform 0.3s ease-in-out';
   navLeft.style.transform = 'translateY(0)';
   navLeft.style.zIndex = '100'; // Ensure nav_left is above background layer
+
+  navBrand.style.transition = 'transform 0.3s ease-in-out';
+  navBrand.style.transform = 'translateY(0)';
+  navBrand.style.zIndex = '100'; // Ensure nav_brand is above background layer
 
   navBackgroundLayer.style.transition = 'transform 0.3s ease-in-out, opacity 0.3s ease-in-out';
   navBackgroundLayer.style.transform = 'translateY(-100%)';
@@ -85,25 +90,28 @@ export function navbarScrollBehavior(): void {
     // Clear any existing timeout
     clearScrollTimeout();
 
-    // Handle nav_left visibility based on scroll direction (only after 100vh)
+    // Handle nav_left and nav_brand visibility based on scroll direction (only after 100vh)
     if (currentScrollY > VIEWPORT_HEIGHT_THRESHOLD) {
       if (scrollDifference > 0 && currentScrollY > SCROLL_HIDE_OFFSET) {
-        // Scrolling down after 100vh - hide nav_left
+        // Scrolling down after 100vh - hide nav_left and nav_brand
         if (!navbarState.isNavLeftHidden) {
           navLeft.style.transform = 'translateY(calc(-100% - var(--_layout---spacing--xxlarge)))';
+          navBrand.style.transform = 'translateY(calc(-100% - var(--_layout---spacing--xxlarge)))';
           navbarState.isNavLeftHidden = true;
         }
       } else if (scrollDifference < 0) {
-        // Scrolling up after 100vh - show nav_left immediately
+        // Scrolling up after 100vh - show nav_left and nav_brand immediately
         if (navbarState.isNavLeftHidden) {
           navLeft.style.transform = 'translateY(0)';
+          navBrand.style.transform = 'translateY(0)';
           navbarState.isNavLeftHidden = false;
         }
       }
     } else {
-      // Within first 100vh - always show nav_left
+      // Within first 100vh - always show nav_left and nav_brand
       if (navbarState.isNavLeftHidden) {
         navLeft.style.transform = 'translateY(0)';
+        navBrand.style.transform = 'translateY(0)';
         navbarState.isNavLeftHidden = false;
       }
     }
@@ -133,9 +141,10 @@ export function navbarScrollBehavior(): void {
     // Auto-show after inactivity (except in top 100vh)
     if (!isInTopViewport) {
       navbarState.scrollTimeout = setTimeout(() => {
-        // Show nav_left
+        // Show nav_left and nav_brand
         if (navbarState.isNavLeftHidden) {
           navLeft.style.transform = 'translateY(0)';
+          navBrand.style.transform = 'translateY(0)';
           navbarState.isNavLeftHidden = false;
         }
 
@@ -215,7 +224,9 @@ export function initSideNav(): void {
     }
 
     navSide.style.transform = 'translate(0%, 0px)';
-    navSideModeles.style.transform = 'translate(0%, 0px)';
+    if (window.innerWidth > 991) {
+      navSideModeles.style.transform = 'translate(0%, 0px)';
+    }
     backgroundLayer.style.opacity = '0.75';
     backgroundLayer.style.pointerEvents = 'auto';
     document.body.style.overflow = 'hidden';
@@ -239,7 +250,9 @@ export function initSideNav(): void {
   // Fonction pour fermer le menu
   const closeMenu = (): void => {
     navSide.style.transform = 'translate(-100%, 0px)';
-    navSideModeles.style.transform = 'translate(-100%, 0px)';
+    if (window.innerWidth > 991) {
+      navSideModeles.style.transform = 'translate(-100%, 0px)';
+    }
     backgroundLayer.style.opacity = '0';
     backgroundLayer.style.pointerEvents = 'none';
     document.body.style.overflow = '';
@@ -321,4 +334,68 @@ export function initSideNav(): void {
       closeMenu();
     }
   });
+}
+
+// ============================================================================
+// MOBILE SIDE MODELES
+// ============================================================================
+/**
+ * Gère l'ouverture/fermeture de .nav_side_modeles sur mobile uniquement (< 767px)
+ * - Au clic sur #trigger-side-modele : ouvre .nav_side_modeles (translateX: 0%)
+ * - Au clic sur [trigger=back-side-mobile] : ferme .nav_side_modeles (translateX: -100%)
+ * - Au clic sur .nav_left : ferme .nav_side_modeles (mobile only)
+ */
+export function initMobileSideModeles(): void {
+  const triggerSideModele = document.querySelector('#trigger-side-modele') as HTMLElement;
+  const backSideMobile = document.querySelector('[trigger=back-side-mobile]') as HTMLElement;
+  const navSideModeles = document.querySelector('.nav_side_modeles') as HTMLElement;
+  const navLeft = document.querySelector('.nav_side-button') as HTMLElement;
+
+  if (!triggerSideModele || !backSideMobile || !navSideModeles) {
+    return;
+  }
+
+  // Fonction pour ouvrir .nav_side_modeles sur mobile
+  const openMobileModeles = (): void => {
+    // Vérifier si on est sur mobile (< 767px)
+    if (window.innerWidth >= 767) {
+      return;
+    }
+
+    navSideModeles.style.transform = 'translateX(0%)';
+  };
+
+  // Fonction pour fermer .nav_side_modeles sur mobile
+  const closeMobileModeles = (): void => {
+    // Vérifier si on est sur mobile (< 767px)
+    if (window.innerWidth >= 767) {
+      return;
+    }
+
+    navSideModeles.style.transform = 'translateX(-100%)';
+  };
+
+  // Gestionnaire de clic sur #trigger-side-modele
+  triggerSideModele.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    openMobileModeles();
+  });
+
+  // Gestionnaire de clic sur [trigger=back-side-mobile]
+  backSideMobile.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    closeMobileModeles();
+  });
+
+  // Gestionnaire de clic sur .nav_left pour fermer le menu sur mobile
+  if (navLeft) {
+    navLeft.addEventListener('click', () => {
+      // Vérifier si on est sur mobile (< 767px)
+      if (window.innerWidth < 767) {
+        closeMobileModeles();
+      }
+    });
+  }
 }

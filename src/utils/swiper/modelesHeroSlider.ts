@@ -63,6 +63,7 @@ export function initModelesHeroSlider(): void {
 
       // Trouve l'élément heading à modifier
       const heading = heroComponent.querySelector('.vehicule_hero_content-heading') as HTMLElement;
+      const picto = heroComponent.querySelector('.vehicule_hero_electric') as HTMLElement;
       if (!heading) return;
 
       // Fonction pour gérer le changement de slide
@@ -72,8 +73,10 @@ export function initModelesHeroSlider(): void {
         // Vérifie si la slide active a la classe is-dark
         if (activeSlide?.classList.contains('is-dark')) {
           heading.classList.add('is-dark-mode');
+          picto.classList.add('is-border-alternate');
         } else {
           heading.classList.remove('is-dark-mode');
+          picto.classList.remove('is-border-alternate');
         }
       };
 

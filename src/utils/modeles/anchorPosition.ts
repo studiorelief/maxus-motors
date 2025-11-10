@@ -35,8 +35,10 @@ export function initAnchorPosition(): void {
   const anchorEl = document.querySelector<HTMLElement>('.section_vehicule_anchor');
   if (!anchorEl) return;
   const wrapperEl = anchorEl.closest<HTMLElement>('.vehicule_anchor_wrapper');
+  const footerEl = document.querySelector<HTMLElement>('.footer_component');
 
   let isFixed = false;
+  let isFooterVisible = false;
 
   const setWrapperReserveHeight = () => {
     if (!wrapperEl) return;
@@ -78,14 +80,35 @@ export function initAnchorPosition(): void {
     rafId = 0;
     const threshold = getThresholdPx();
     const scrolled = window.scrollY || window.pageYOffset;
-    if (scrolled > threshold) fixToBottom();
-    else unfixToFlow();
+
+    // Hide if footer is visible, otherwise show/hide based on scroll threshold
+    if (isFooterVisible) {
+      unfixToFlow();
+    } else if (scrolled > threshold) {
+      fixToBottom();
+    } else {
+      unfixToFlow();
+    }
   };
 
   const onScroll = () => {
     if (rafId) return;
     rafId = window.requestAnimationFrame(evaluate);
   };
+
+  // Set up IntersectionObserver for footer
+  if (footerEl) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isFooterVisible = entry.isIntersecting;
+          evaluate();
+        });
+      },
+      { threshold: 0, rootMargin: '0px' }
+    );
+    observer.observe(footerEl);
+  }
 
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', () => {

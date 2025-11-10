@@ -31,7 +31,7 @@ const OFFRES_SLIDER_CONFIG: SwiperOptions = {
     eventsTarget: 'container',
   },
   pagination: {
-    el: '.section_offres .swiper-pagination-wrapper',
+    el: '.section_offres .swiper-pagination-wrapper, .section_blog-screen .swiper-pagination-wrapper',
     bulletClass: 'swiper-bullet',
     bulletActiveClass: 'is-active',
     clickable: true,
