@@ -55,13 +55,22 @@ export const sParallax = () => {
     return;
   }
 
-  // Animate standard parallax elements (-5rem to 5rem)
+  // Check if mobile device
+  const isMobile = window.matchMedia('(max-width: 767px)').matches;
+
+  // Animate standard parallax elements
+  // Desktop: -5rem to 5rem, Mobile: -2.5rem to 2.5rem
   if (standardElements.length > 0) {
-    createParallaxAnimation(standardElements, '-5rem', '5rem');
+    const fromY = isMobile ? '-2.5rem' : '-5rem';
+    const toY = isMobile ? '2.5rem' : '5rem';
+    createParallaxAnimation(standardElements, fromY, toY);
   }
 
-  // Animate small parallax elements (-2.5rem to 2.5rem)
+  // Animate small parallax elements
+  // Desktop: -4rem to 0rem, Mobile: -2rem to 0rem
   if (smallElements.length > 0) {
-    createParallaxAnimation(smallElements, '-4rem', '0rem');
+    const fromY = isMobile ? '-2rem' : '-4rem';
+    const toY = isMobile ? '0rem' : '0rem';
+    createParallaxAnimation(smallElements, fromY, toY);
   }
 };

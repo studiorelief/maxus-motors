@@ -63,6 +63,8 @@ const API_CONFIG = {
   rateLimitDelay: 150,
   /** Timeout des requêtes (ms) */
   requestTimeout: 10000,
+  /** Timeout pour la géolocalisation (ms) */
+  geolocationTimeout: 30000,
   /** Pays par défaut pour le géocodage */
   defaultCountry: 'fr',
 } as const;
@@ -962,8 +964,8 @@ function setupGeolocation(map: mapboxgl.Map): void {
         alert(errorMessage);
       },
       {
-        enableHighAccuracy: true,
-        timeout: API_CONFIG.requestTimeout,
+        enableHighAccuracy: false, // Désactivé pour éviter les timeouts
+        timeout: API_CONFIG.geolocationTimeout,
         maximumAge: 300000,
       }
     );
