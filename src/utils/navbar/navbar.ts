@@ -328,6 +328,16 @@ export function initSideNav(): void {
     }
   });
 
+  // Gestionnaire de clic sur les liens de navigation pour fermer le menu
+  const navLinks = document.querySelectorAll('.nav_side_navigation-menu-link');
+  navLinks.forEach((link) => {
+    link.addEventListener('click', () => {
+      if (isOpen) {
+        closeMenu();
+      }
+    });
+  });
+
   // Optionnel : fermer avec la touche Escape
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && isOpen) {

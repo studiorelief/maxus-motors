@@ -40,6 +40,7 @@ const getModeleInnerSliderConfig = (swiperEl: HTMLElement): SwiperOptions => {
     //     delay: 5000, // 5 seconds between slides
     //     disableOnInteraction: false,
     //   },
+    autoHeight: true,
     grabCursor: true,
     allowTouchMove: true,
     keyboard: true,

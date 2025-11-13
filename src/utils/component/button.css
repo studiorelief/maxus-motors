@@ -122,3 +122,17 @@
 .blog_hub_cards:hover .blog_hub_cards-cover {
   scale: 1.05;
 }
+
+/**
+ * ============================================================================
+ * STYLES CMS
+ * ============================================================================
+ */
+
+.blog_hero_back .icon-1x1-medium {
+  transition: transform 0.3s ease-out;
+}
+
+.blog_hero_back:hover .icon-1x1-medium {
+  transform: translateX(-0.25rem);
+}
