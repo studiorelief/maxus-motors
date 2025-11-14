@@ -332,7 +332,8 @@ export function initSideNav(): void {
   const navLinks = document.querySelectorAll('.nav_side_navigation-menu-link');
   navLinks.forEach((link) => {
     link.addEventListener('click', () => {
-      if (isOpen) {
+      // Ne pas fermer le menu si c'est le lien #trigger-side-modele
+      if (isOpen && link.id !== 'trigger-side-modele') {
         closeMenu();
       }
     });
