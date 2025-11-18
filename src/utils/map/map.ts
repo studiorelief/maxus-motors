@@ -724,7 +724,8 @@ function extractDistanceValue(distanceElement: Element | null): number {
   }
 
   const text = distanceElement.textContent.trim();
-  const match = text.match(/(\d+(?:\.\d+)?)\s*km/i);
+  // Supporter les distances approximatives (~15 KM) et exactes (15 KM)
+  const match = text.match(/~?(\d+(?:\.\d+)?)\s*km/i);
 
   if (match) {
     return parseFloat(match[1]);
@@ -828,6 +829,62 @@ function sortConcessionsByDistanceImmediate(): void {
 // ============================================================================
 
 /**
+ * Calcule la distance à vol d'oiseau entre deux points (formule de Haversine)
+ * @param from Coordonnées de départ [longitude, latitude]
+ * @param to Coordonnées d'arrivée [longitude, latitude]
+ * @returns Distance en kilomètres
+ */
+function calculateHaversineDistance(from: [number, number], to: [number, number]): number {
+  const R = 6371; // Rayon de la Terre en km
+  const toRad = (deg: number): number => (deg * Math.PI) / 180;
+
+  const [lon1, lat1] = from;
+  const [lon2, lat2] = to;
+
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+/**
+ * Affiche immédiatement les distances approximatives à vol d'oiseau
+ * @param userLocation Position utilisateur
+ */
+function displayApproximateDistances(userLocation: [number, number]): void {
+  const cards = document.querySelectorAll(SELECTORS.projectCards);
+
+  cards.forEach((cardElement) => {
+    const latElement = cardElement.querySelector(SELECTORS.cardLatitude);
+    const lonElement = cardElement.querySelector(SELECTORS.cardLongitude);
+
+    if (!latElement?.textContent || !lonElement?.textContent) {
+      return;
+    }
+
+    const destinationLat = parseFloat(latElement.textContent);
+    const destinationLon = parseFloat(lonElement.textContent);
+    const destination: [number, number] = [destinationLon, destinationLat];
+
+    const distance = calculateHaversineDistance(userLocation, destination);
+    const distanceElement = findDistanceElement(cardElement);
+
+    if (distanceElement) {
+      distanceElement.classList.remove('distance-loading');
+      distanceElement.textContent = `~${distance.toFixed(1)} KM`;
+    }
+  });
+
+  // Trier immédiatement par distance approximative
+  sortConcessionsByDistance(true);
+}
+
+/**
  * Calcule et met à jour toutes les distances
  * @param map Instance de la carte
  * @param userLocation Position utilisateur
@@ -838,14 +895,8 @@ async function updateAllDistances(
 ): Promise<void> {
   const cards = document.querySelectorAll(SELECTORS.projectCards);
 
-  // Ajouter l'état de chargement
-  cards.forEach((cardElement) => {
-    const distanceElement = findDistanceElement(cardElement);
-    if (distanceElement) {
-      distanceElement.classList.add('distance-loading');
-      distanceElement.textContent = 'Calcul';
-    }
-  });
+  // Note: Ne pas réinitialiser l'affichage ici car les distances approximatives
+  // sont déjà affichées par displayApproximateDistances()
 
   // Calculer les distances
   for (const cardElement of cards) {
@@ -883,7 +934,7 @@ async function updateAllDistances(
     }
   }
 
-  // Trier après calcul complet
+  // Trier après calcul complet des distances réelles
   sortConcessionsByDistance(true);
 }
 
@@ -937,6 +988,9 @@ function setupGeolocation(map: mapboxgl.Map): void {
           </div>
         `;
         createUserMarker(map, [longitude, latitude], popupContent);
+
+        // Afficher immédiatement les distances approximatives
+        displayApproximateDistances([longitude, latitude]);
 
         try {
           await updateAllDistances(map, [longitude, latitude]);
@@ -1021,6 +1075,9 @@ function setupAddressInput(map: mapboxgl.Map): void {
         </div>
       `;
       createUserMarker(map, [longitude, latitude], popupContent);
+
+      // Afficher immédiatement les distances approximatives
+      displayApproximateDistances([longitude, latitude]);
 
       try {
         await updateAllDistances(map, [longitude, latitude]);
