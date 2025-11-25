@@ -41,8 +41,8 @@ export function loadAttributesScripts() {
   // Finsweet Libraries
   loadScript('https://cdn.jsdelivr.net/npm/@finsweet/attributes-accordion@1/accordion.js');
   loadScript('https://cdn.jsdelivr.net/npm/@finsweet/attributes-selectcustom@1/selectcustom.js');
-  //   loadScript('https://cdn.jsdelivr.net/npm/@finsweet/attributes-cmsselect@1/cmsselect.js');
-  //   loadScript('https://cdn.jsdelivr.net/npm/@finsweet/attributes-inputactive@1/inputactive.js');
+  loadScript('https://cdn.jsdelivr.net/npm/@finsweet/attributes-cmsselect@1/cmsselect.js');
+  // loadScript('https://cdn.jsdelivr.net/npm/@finsweet/attributes-inputactive@1/inputactive.js');
   // Finsweet Attributes V2
   loadScript('https://cdn.jsdelivr.net/npm/@finsweet/attributes@2/attributes.js', [
     'fs-list',
