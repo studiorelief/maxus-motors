@@ -11,28 +11,17 @@ export function popupSales() {
     return;
   }
 
-  // Clé pour le localStorage
-  const STORAGE_KEY = 'popup-sales-last-shown';
-  const ONE_DAY_MS = 24 * 60 * 60 * 1000; // 24 heures en millisecondes
+  // Clé pour le sessionStorage
+  const STORAGE_KEY = 'popup-sales-shown';
 
   // Vérifier si le popup peut être affiché automatiquement
   function canShowAutoPopup(): boolean {
-    const lastShown = localStorage.getItem(STORAGE_KEY);
-    if (!lastShown) {
-      return true; // Jamais affiché
-    }
-    const lastShownTime = parseInt(lastShown, 10);
-    if (isNaN(lastShownTime)) {
-      return true; // Corruption de la valeur -> considérer comme jamais affiché
-    }
-    const now = Date.now();
-    const timeElapsed = now - lastShownTime;
-    return timeElapsed >= ONE_DAY_MS; // true si plus de 24h, sinon false
+    return !sessionStorage.getItem(STORAGE_KEY);
   }
 
-  // Sauvegarder la date d'affichage
+  // Sauvegarder l'affichage pour la session
   function saveAutoPopupShown() {
-    localStorage.setItem(STORAGE_KEY, Date.now().toString());
+    sessionStorage.setItem(STORAGE_KEY, '1');
   }
 
   // Fonction pour ouvrir le popup
@@ -121,6 +110,6 @@ export function popupSales() {
     setTimeout(() => {
       openPopup();
       saveAutoPopupShown();
-    }, 5000); // 5 secondes
+    }, 15000); // 15 secondes
   }
 }
