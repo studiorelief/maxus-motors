@@ -2,6 +2,7 @@ import './index.css';
 
 import { sParallax } from '$utils/animations/sectionParallax';
 import { comparateurLogic } from '$utils/comparateur/comparateur';
+import { initLazyVideo } from '$utils/global/lazyVideo';
 import { loadAttributesScripts } from '$utils/global/loadScript';
 import { initMarker } from '$utils/global/marker';
 import { initMap } from '$utils/map/map';
@@ -22,6 +23,9 @@ window.Webflow ||= [];
 window.Webflow.push(() => {
   /* script */
   loadAttributesScripts();
+
+  /* Lazy Video */
+  initLazyVideo();
 
   /* Recette */
   initMarker();

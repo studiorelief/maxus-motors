@@ -55,7 +55,41 @@ export function initHomeHeroSlider(): void {
 
   swipers.forEach((swiperEl) => {
     try {
-      new Swiper(swiperEl as HTMLElement, HOME_HERO_SLIDER_CONFIG);
+      // Strip src from all slide videos before Swiper init to prevent bulk download
+      const videos = swiperEl.querySelectorAll<HTMLVideoElement>('video.video-component');
+      for (const video of videos) {
+        const src = video.getAttribute('src');
+        if (src) {
+          video.setAttribute('data-src', src);
+          video.removeAttribute('src');
+          video.load();
+        }
+      }
+
+      const swiper = new Swiper(swiperEl as HTMLElement, HOME_HERO_SLIDER_CONFIG);
+
+      // Load & play the active slide video on each transition
+      const handleSlideChange = () => {
+        const { slides } = swiper;
+        for (let i = 0; i < slides.length; i++) {
+          const video = slides[i].querySelector<HTMLVideoElement>('video.video-component');
+          if (!video) continue;
+
+          if (i === swiper.activeIndex) {
+            const dataSrc = video.getAttribute('data-src');
+            if (dataSrc && video.getAttribute('src') !== dataSrc) {
+              video.src = dataSrc;
+            }
+            video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+        }
+      };
+
+      // Fire once on init + on every slide change
+      handleSlideChange();
+      swiper.on('slideChangeTransitionStart', handleSlideChange);
     } catch (error) {
       console.error('Failed to initialize home hero slider:', error);
     }
