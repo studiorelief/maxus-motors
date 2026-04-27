@@ -18,7 +18,7 @@ const HOME_HERO_SLIDER_CONFIG: SwiperOptions = {
   spaceBetween: 0,
   speed: 500, // 500ms transition speed for smooth animations
   autoplay: {
-    delay: 5000, // 5 seconds between slides
+    delay: 15000, // 15 seconds between slides
     disableOnInteraction: false,
   },
   grabCursor: true,
