@@ -5,7 +5,8 @@
  *
  * Fonctionnalités principales
  * - Géolocalisation GPS et saisie d'adresse avec autocomplétion
- * - Calcul d'itinéraires et de distances (Mapbox Directions)
+ * - Distances à vol d'oiseau (Haversine, sans API) pour le listing et le tri
+ * - Itinéraire routier à la demande via Mapbox Directions (clic sur une card uniquement)
  * - Tri automatique des concessions par distance
  * - UI/UX: popups, survols, focus et indicateurs de chargement
  *
@@ -59,8 +60,6 @@ const MAP_CONFIG = {
  * Configuration des appels API
  */
 const API_CONFIG = {
-  /** Délai entre les appels API (ms) */
-  rateLimitDelay: 150,
   /** Timeout des requêtes (ms) */
   requestTimeout: 10000,
   /** Timeout pour la géolocalisation (ms) */
@@ -884,60 +883,6 @@ function displayApproximateDistances(userLocation: [number, number]): void {
   sortConcessionsByDistance(true);
 }
 
-/**
- * Calcule et met à jour toutes les distances
- * @param map Instance de la carte
- * @param userLocation Position utilisateur
- */
-async function updateAllDistances(
-  map: mapboxgl.Map,
-  userLocation: [number, number]
-): Promise<void> {
-  const cards = document.querySelectorAll(SELECTORS.projectCards);
-
-  // Note: Ne pas réinitialiser l'affichage ici car les distances approximatives
-  // sont déjà affichées par displayApproximateDistances()
-
-  // Calculer les distances
-  for (const cardElement of cards) {
-    try {
-      const latElement = cardElement.querySelector(SELECTORS.cardLatitude);
-      const lonElement = cardElement.querySelector(SELECTORS.cardLongitude);
-
-      if (!latElement?.textContent || !lonElement?.textContent) {
-        console.error('Coordonnées manquantes pour la carte:', cardElement);
-        continue;
-      }
-
-      const destinationLat = parseFloat(latElement.textContent);
-      const destinationLon = parseFloat(lonElement.textContent);
-      const destination: [number, number] = [destinationLon, destinationLat];
-
-      const route = await getDirections(userLocation, destination);
-      const distance = (route.distance / 1000).toFixed(1);
-
-      const distanceElement = findDistanceElement(cardElement);
-      if (distanceElement) {
-        distanceElement.classList.remove('distance-loading');
-        distanceElement.textContent = `${distance} KM`;
-      }
-
-      await new Promise((resolve) => setTimeout(resolve, API_CONFIG.rateLimitDelay));
-    } catch (error) {
-      console.error('Erreur lors du calcul de distance:', error);
-
-      const distanceElement = findDistanceElement(cardElement);
-      if (distanceElement) {
-        distanceElement.classList.remove('distance-loading');
-        distanceElement.textContent = '-- KM';
-      }
-    }
-  }
-
-  // Trier après calcul complet des distances réelles
-  sortConcessionsByDistance(true);
-}
-
 // ============================================================================
 // GÉOLOCALISATION
 // ============================================================================
@@ -989,14 +934,10 @@ function setupGeolocation(map: mapboxgl.Map): void {
         `;
         createUserMarker(map, [longitude, latitude], popupContent);
 
-        // Afficher immédiatement les distances approximatives
+        // Afficher les distances à vol d'oiseau (Haversine, sans appel API).
+        // La distance routière exacte n'est calculée qu'à la demande, dans performItineraryFromCard,
+        // pour éviter d'exploser le quota Mapbox Directions sur chaque géolocalisation.
         displayApproximateDistances([longitude, latitude]);
-
-        try {
-          await updateAllDistances(map, [longitude, latitude]);
-        } catch (error) {
-          console.error('Erreur lors du calcul des distances:', error);
-        }
       },
       (error) => {
         // geoButton.classList.remove('loading');
@@ -1076,14 +1017,9 @@ function setupAddressInput(map: mapboxgl.Map): void {
       `;
       createUserMarker(map, [longitude, latitude], popupContent);
 
-      // Afficher immédiatement les distances approximatives
+      // Afficher les distances à vol d'oiseau (Haversine, sans appel API).
+      // Voir le commentaire dans setupGeolocation pour le détail.
       displayApproximateDistances([longitude, latitude]);
-
-      try {
-        await updateAllDistances(map, [longitude, latitude]);
-      } catch (error) {
-        console.error('Erreur lors du calcul des distances:', error);
-      }
     } catch (error) {
       console.error("Erreur lors du traitement de l'adresse:", error);
       alert(
