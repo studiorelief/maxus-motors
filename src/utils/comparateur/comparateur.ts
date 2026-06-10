@@ -23,6 +23,7 @@ interface Vehicle {
   charge: number; // en kg
   volume?: number; // en m³
   longueur?: number; // en m
+  disabled?: boolean; // true = mis en stand by, exclu du comparateur
 }
 
 /**
@@ -77,6 +78,7 @@ const VEHICLES: Vehicle[] = [
     charge: 1080, // kg
     volume: 6.3, // m³ (max)
     longueur: 2.77, // m
+    disabled: true, // Stand by : passer à false pour réactiver
   },
   {
     id: 'edeliver5',
@@ -101,6 +103,7 @@ const VEHICLES: Vehicle[] = [
     charge: 1040, // kg
     volume: 12.33, // m³
     longueur: 0, // m
+    disabled: true, // Stand by : passer à false pour réactiver
   },
   {
     id: 'eterron9',
@@ -117,8 +120,14 @@ const VEHICLES: Vehicle[] = [
     charge: 1000, // Non spécifié clairement dans l'image
     volume: 0,
     longueur: 0, // m
+    disabled: true, // Stand by : passer à false pour réactiver
   },
 ];
+
+/**
+ * Véhicules actifs (hors stand by) — c'est cette liste qu'utilise le comparateur
+ */
+const ACTIVE_VEHICLES: Vehicle[] = VEHICLES.filter((vehicle) => !vehicle.disabled);
 
 // ============================================================================
 // ALGORITHME DE COMPARAISON
@@ -179,7 +188,7 @@ function findBestMatch(criteria: SearchCriteria): Vehicle | null {
   let bestVehicle: Vehicle | null = null;
   let bestScore: number | null = null;
 
-  for (const vehicle of VEHICLES) {
+  for (const vehicle of ACTIVE_VEHICLES) {
     const score = calculateScore(vehicle, criteria);
 
     if (score !== null) {
@@ -332,7 +341,7 @@ export function comparateurLogic(): void {
 
       // Debug: afficher les scores de tous les véhicules
       console.log('=== SCORES DES VÉHICULES ===');
-      for (const vehicle of VEHICLES) {
+      for (const vehicle of ACTIVE_VEHICLES) {
         const score = calculateScore(vehicle, criteria);
         console.log(
           `${vehicle.name}: ${score !== null ? score.toFixed(2) : 'N/A'} (charge: ${vehicle.charge}, volume: ${vehicle.volume}, longueur: ${vehicle.longueur})`
@@ -346,7 +355,7 @@ export function comparateurLogic(): void {
         console.log(`🏆 VÉHICULE SÉLECTIONNÉ: ${bestVehicle.name}`);
 
         // Cacher tous les contenus de véhicules
-        for (const vehicle of VEHICLES) {
+        for (const vehicle of ACTIVE_VEHICLES) {
           const vehicleContent = document.querySelector(
             `.comparateur_step-3_content.is-${vehicle.id}`
           ) as HTMLElement;
